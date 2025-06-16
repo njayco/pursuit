@@ -3,39 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My AI Journey Begins!</title>
+    <title>AI Native Journey Welcome</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #f0f2f5;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
             text-align: center;
-            margin-bottom: 30px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        p {
-            color: #34495e;
-            margin-bottom: 20px;
+        input {
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #welcomeMessage {
+            margin-top: 20px;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>My AI Journey Begins!</h1>
-        <p>Welcome to my journey into the world of artificial intelligence. This page marks the beginning of an exciting adventure in AI-native development.</p>
-        <p>Here, I'll document my learning process, share insights, and showcase projects as I explore the fascinating realm of AI.</p>
+        <div id="nameForm">
+            <h2>Welcome to AI Native Journey</h2>
+            <input type="text" id="nameInput" placeholder="Enter your name">
+            <br>
+            <button onclick="showWelcomeMessage()">Submit</button>
+        </div>
+        <div id="welcomeMessage"></div>
     </div>
+
+    <script>
+        function showWelcomeMessage() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (name) {
+                const welcomeDiv = document.getElementById('welcomeMessage');
+                welcomeDiv.innerHTML = `
+                    <h2>Ayo! ${name} Congrats on starting your AI Native Journey!</h2>
+                    <p>Welcome ${name}, Pursuit AI-Native June cohort Member.</p>
+                `;
+                welcomeDiv.style.display = 'block';
+                document.getElementById('nameForm').style.display = 'none';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                showWelcomeMessage();
+            }
+        });
+    </script>
 </body>
 </html> 
