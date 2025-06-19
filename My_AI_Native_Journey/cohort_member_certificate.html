@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Member Certificate</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .name-input-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+        .name-input-container h3 {
+            color: #0984e3;
+            margin-bottom: 15px;
+        }
+        .name-input {
+            padding: 10px;
+            border: 2px solid #74b9ff;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .update-btn {
+            padding: 10px 20px;
+            background: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .update-btn:hover {
+            background: #0747a6;
+        }
+        .certificate {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 800px;
+            border: 3px solid #74b9ff;
+            position: relative;
+        }
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #74b9ff;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        .header {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #0984e3;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+        .content {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        .name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0984e3;
+            margin: 20px 0;
+            text-decoration: underline;
+        }
+        .date {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+        .seal {
+            width: 80px;
+            height: 80px;
+            background: #0984e3;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .signature-line {
+            width: 200px;
+            height: 2px;
+            background: #2c3e50;
+            margin: 10px auto;
+        }
+        .signature-text {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="name-input-container">
+        <h3>🎓 Personalize Your Certificate</h3>
+        <input type="text" id="nameInput" class="name-input" placeholder="Enter your name" value="">
+        <button onclick="updateName()" class="update-btn">Update Certificate</button>
+    </div>
+
+    <div class="certificate">
+        <div class="header">
+            <div class="title">Certificate of Enrollment</div>
+            <div class="subtitle">Pursuit AI-Native June Cohort</div>
+        </div>
+        
+        <div class="content">
+            This is to certify that
+            <div class="name" id="memberName">Cohort Member</div>
+            has successfully enrolled in the
+            <strong>Pursuit AI-Native June Cohort</strong>
+            and is ready to begin their journey in AI-native development.
+        </div>
+        
+        <div class="content">
+            Welcome to an exciting adventure in learning, collaboration, and innovation. Your commitment to mastering AI-native development practices will open doors to incredible opportunities in the tech industry.
+        </div>
+        
+        <div class="seal">AI</div>
+        
+        <div class="date">
+            Enrolled on: <span id="currentDate"></span>
+        </div>
+        
+        <div class="signature">
+            <div>
+                <div class="signature-line"></div>
+                <div class="signature-text">Pursuit Leadership</div>
+            </div>
+            <div>
+                <div class="signature-line"></div>
+                <div class="signature-text">AI-Native Program Director</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+        
+        // Function to update the name on the certificate
+        function updateName() {
+            const nameInput = document.getElementById('nameInput');
+            const memberName = document.getElementById('memberName');
+            const name = nameInput.value.trim();
+            
+            if (name) {
+                memberName.textContent = name;
+                // Save to localStorage for future visits
+                localStorage.setItem('certificateName', name);
+                alert('Certificate updated with your name! 🎉');
+            } else {
+                alert('Please enter your name first!');
+            }
+        }
+        
+        // Load saved name from localStorage if available
+        const savedName = localStorage.getItem('certificateName');
+        if (savedName) {
+            document.getElementById('nameInput').value = savedName;
+            document.getElementById('memberName').textContent = savedName;
+        }
+        
+        // Allow Enter key to update name
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateName();
+            }
+        });
+    </script>
+</body>
+</html> 

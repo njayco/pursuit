@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Director Certificate</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .certificate {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 800px;
+            border: 3px solid #gold;
+            position: relative;
+        }
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #gold;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        .header {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+        .content {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+        .name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8e44ad;
+            margin: 20px 0;
+            text-decoration: underline;
+        }
+        .date {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+        .seal {
+            width: 80px;
+            height: 80px;
+            background: #8e44ad;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .signature-line {
+            width: 200px;
+            height: 2px;
+            background: #2c3e50;
+            margin: 10px auto;
+        }
+        .signature-text {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <div class="header">
+            <div class="title">Certificate of Recognition</div>
+            <div class="subtitle">Pursuit AI-Native June Cohort</div>
+        </div>
+        
+        <div class="content">
+            This is to certify that
+            <div class="name">Najee Jeremiah</div>
+            has been appointed as the
+            <strong>AI Director</strong>
+            of the Pursuit AI-Native June Cohort.
+        </div>
+        
+        <div class="content">
+            In recognition of exceptional leadership, technical expertise, and dedication to advancing AI-native development practices within our community.
+        </div>
+        
+        <div class="seal">AI</div>
+        
+        <div class="date">
+            Awarded on: <span id="currentDate"></span>
+        </div>
+        
+        <div class="signature">
+            <div>
+                <div class="signature-line"></div>
+                <div class="signature-text">Pursuit Leadership</div>
+            </div>
+            <div>
+                <div class="signature-line"></div>
+                <div class="signature-text">AI-Native Program Director</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html> 

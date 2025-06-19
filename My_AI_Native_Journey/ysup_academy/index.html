@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YsUp AI-Native Academy @ Pursuit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="text-3xl font-bold mb-2">YsUp AI-Native Academy @ Pursuit</h1>
+            <p class="text-sm">Learn and earn YBUCKS!</p>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="loading-indicator" id="loading-indicator">
+            <div class="loading-spinner"></div>
+            Thinking...
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your answer or question here..." disabled>
+            <button id="send-button" disabled>Send <i class="fas fa-paper-plane ml-2"></i></button>
+        </div>
+        <div class="score-board">
+            <div class="score-item">Student YBUCKS: <span id="student-score">0</span></div>
+            <div class="score-item">Teacher YBUCKS: <span id="teacher-score">0</span></div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button id="modalConfirmButton" class="modal-button">OK</button>
+                <button id="modalCancelButton" class="modal-button cancel" style="display:none;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript modules -->
+    <script type="module" src="js/config/firebase-config.js"></script>
+    <script type="module" src="js/data/lessons.js"></script>
+    <script type="module" src="js/utils/modal.js"></script>
+    <script type="module" src="js/utils/gemini-api.js"></script>
+    <script type="module" src="js/game/game-state.js"></script>
+    <script type="module" src="js/game/game-logic.js"></script>
+    <script type="module" src="js/ui/chat-ui.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html> 

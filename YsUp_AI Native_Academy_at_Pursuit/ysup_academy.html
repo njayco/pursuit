@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YsUp AI-Native Academy @ Pursuit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .game-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 70vh;
+        }
+        .game-header {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #e2e8f0;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            line-height: 1.6;
+        }
+        .message.user {
+            background-color: #d1e7dd; /* Light green */
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .message.bot {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .input-area {
+            display: flex;
+            padding: 20px 30px;
+            border-top: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+        }
+        .input-area input {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid #cbd5e1;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .input-area input:focus {
+            border-color: #6366f1;
+        }
+        .input-area button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-area button:hover {
+            background-color: #5a5be0;
+            transform: translateY(-1px);
+        }
+        .input-area button:active {
+            transform: translateY(0);
+        }
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 20px;
+            background-color: #475569;
+            color: white;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            font-weight: 600;
+        }
+        .score-item {
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .score-item span {
+            font-size: 1.2rem;
+            margin-left: 5px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .modal-button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .modal-button.cancel {
+            background-color: #ef4444;
+        }
+        .modal-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Loading indicator */
+        .loading-indicator {
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            color: #6366f1;
+            font-size: 0.9rem;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #6366f1;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="text-3xl font-bold mb-2">YsUp AI-Native Academy @ Pursuit</h1>
+            <p class="text-sm">Learn and earn YBUCKS!</p>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <!-- Chat messages will be appended here -->
+            <div class="message bot">
+                Welcome to YsUp AI-Native Academy @ Pursuit! Your objective is to learn everything taught in class before the bell rings by asking questions and scoring more YBUCKS as a team than the teacher (me, the computer). Let's start with the rules:
+                <br><br>
+                <strong>Rules:</strong>
+                <ul>
+                    <li><strong>Ask:</strong> Students are encouraged to ask questions about the lecture without fear. You can write down your questions and answers before asking for assistance.</li>
+                    <li><strong>Assistance:</strong> The first student to raise their hand with the correct answer, or the team captain or teacher, can assist the student with their question. However, players cannot give away any answers. Instead, they must use clever questions, hints, examples, formulas, etc. to help the student arrive at the answer on their own.</li>
+                    <li><strong>No Cheating:</strong> Cheating is not allowed in the game. Players cannot give away any answers, and they must use clever questions, hints, examples, formulas, etc. to help the student arrive at the answer on their own.</li>
+                </ul>
+                Ready to begin? Type 'Yes' to start the first lesson!
+            </div>
+        </div>
+        <div class="loading-indicator" id="loading-indicator">
+            <div class="loading-spinner"></div>
+            Thinking...
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your answer or question here..." disabled>
+            <button id="send-button" disabled>Send <i class="fas fa-paper-plane ml-2"></i></button>
+        </div>
+        <div class="score-board">
+            <div class="score-item">Student YBUCKS: <span id="student-score">0</span></div>
+            <div class="score-item">Teacher YBUCKS: <span id="teacher-score">0</span></div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button id="modalConfirmButton" class="modal-button">OK</button>
+                <button id="modalCancelButton" class="modal-button cancel" style="display:none;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, query, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration (provided globally by the environment)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        let app;
+        let db;
+        let auth;
+        let userId = null;
+        let isAuthReady = false;
+
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Authenticate and set up auth listener
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    console.log("Firebase authenticated. User ID:", userId);
+                    isAuthReady = true;
+                    // Start game or load user state here
+                    if (!gameStarted) {
+                        loadGameState(); // Load game state only after auth is ready
+                    }
+                } else {
+                    // Sign in anonymously if no user is found and no custom token is provided
+                    if (initialAuthToken) {
+                        try {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                            console.log("Signed in with custom token.");
+                        } catch (error) {
+                            console.error("Error signing in with custom token:", error);
+                            await signInAnonymously(auth); // Fallback to anonymous
+                            console.log("Signed in anonymously (fallback).");
+                        }
+                    } else {
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously.");
+                    }
+                    isAuthReady = true; // Mark as ready even if anonymous
+                    if (!gameStarted) {
+                        loadGameState(); // Load game state only after auth is ready
+                    }
+                }
+            });
+        } else {
+            console.error("Firebase config not available. Running in a limited mode without persistence.");
+            isAuthReady = true; // For local testing without firebase
+            loadGameState(); // Proceed without Firebase if config is missing
+        }
+
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const studentScoreSpan = document.getElementById('student-score');
+        const teacherScoreSpan = document.getElementById('teacher-score');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        const confirmModal = document.getElementById('confirmModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirmButton = document.getElementById('modalConfirmButton');
+        const modalCancelButton = document.getElementById('modalCancelButton');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        let studentScore = 0;
+        let teacherScore = 0;
+        let gameStarted = false;
+        let currentQuestion = null;
+        let currentLessonIndex = 0;
+        let hasAskedQuestionThisRound = false;
+
+        // Content from slides
+        const lessons = [
+            {
+                topic: "Welcome & Program Overview",
+                content: `Welcome to the Pursuit AI-Native Program Launch! Today is Day 1 of your AI-native journey. Our objectives are to build your support system, increase collaboration, set you up for success, get to know your community, and learn more about the pilot (structure, expectations, your support team, schedule, and resources).
+                <br><br>
+                The AI-Native Program focuses on understanding 'What' AI is reshaping technology and society, 'Why' you need to be AI-native for future jobs, and 'How' through skills & training.
+                <br><br>
+                Key roles: Dave Yang (Creative & brand at Pursuit), Afiya Augustine (Your success!).
+                <br><br>
+                We also looked at 'Vibe Coding' which suggests that for the Winter 2025 batch, 95% of lines of code will be LLM generated. Y Combinator (YC) is a tech startup accelerator and venture capital firm that launched companies like AirBnb, Stripe, Doordash.`,
+                questions: [
+                    {
+                        q: "According to the lesson, what is the primary reason why Pursuit emphasizes becoming 'AI-native' for its builders?",
+                        a: "To be prepared for future jobs"
+                    },
+                    {
+                        q: "What percentage of code is projected to be LLM generated by the Winter 2025 batch, according to the 'Vibe Coding' concept?",
+                        a: "95%"
+                    },
+                    {
+                        q: "Who is responsible for your success in the Pursuit AI-Native program?",
+                        a: "Afiya Augustine"
+                    },
+                    {
+                        q: "Who is responsible for creative & brand at Pursuit?",
+                        a: "Dave Yang"
+                    }
+                ]
+            },
+            {
+                topic: "Mindsets & Daily Rituals",
+                content: `The Path Forward as Builders Together focuses on Structure & Mindsets. We encourage:
+                <ul>
+                    <li><strong>Learn to Learn:</strong> Master the art of acquiring knowledge.</li>
+                    <li><strong>Learn to Build:</strong> Apply your knowledge to create real valuable work.</li>
+                    <li><strong>Build to Learn:</strong> Gain insights and confidence through creation.</li>
+                    <li><strong>Build to Earn:</strong> Transform skills into opportunity!</li>
+                </ul>
+                <br>
+                Winning Mindsets include: Growth Mindset & Problem Solving, Build Mindset, Collaboration & Communication, and Persistence.
+                <br><br>
+                Daily Rituals:
+                <ul>
+                    <li><strong>Stand-ups:</strong> Beginning of every day, discuss progress and share blockers.</li>
+                    <li><strong>Build:</strong> Every day, hands-on sessions to turn ideas into projects.</li>
+                    <li><strong>Retro:</strong> End of every day, reflect on what went well, what didn't, and what to do differently.</li>
+                </ul>
+                <br>
+                The Weekly Structure involves increasing complexity in weekly builds and includes Demos and Presentations.`,
+                questions: [
+                    {
+                        q: "Can you name one of the four 'Learning Mindsets' emphasized by Pursuit?",
+                        a: ["Learn to Learn", "Learn to Build", "Build to Learn", "Build to Earn"]
+                    },
+                    {
+                        q: "What is the purpose of the 'Retro' daily ritual?",
+                        a: "To reflect on what went well, what didn't, and what the team can do differently"
+                    },
+                    {
+                        q: "What is the meaning of 'Build to Earn'?",
+                        a: "Transform skills into opportunity"
+                    },
+                    {
+                        q: "What is the purpose of 'Stand-ups'?",
+                        a: "To discuss progress and share blockers"
+                    }
+                ]
+            },
+            {
+                topic: "Weekly Breakdown & Communication",
+                content: `The June 2025 Cohort has an 8-Week Foundation Curriculum.
+                <br><br>
+                Weekly Breakdown:
+                <ul>
+                    <li><strong>Week 1 (June 14-18):</strong> Getting Started with AI-Native Building (Foundation skills and First AI interactions).</li>
+                    <li><strong>Week 2 (June 21-25):</strong> AI as Your Development Partner (Learning to direct AI for bigger technical tasks).</li>
+                    <li><strong>Week 3 (June 28 - July 2):</strong> Exploring Data, APIs & Product Ideas.</li>
+                    <li>...and so on, up to Week 8: Solution Showcase & Professional Development.</li>
+                </ul>
+                <br>
+                We also emphasize "Build in Public" using X (Twitter) to share progress, enhance online presence, and expand networks. This is key to leapfrogging the traditional hiring process.
+                <br><br>
+                Communication Playbook:
+                <ul>
+                    <li><strong>Slack:</strong> Our Hub for Daily Collaboration & Communication.</li>
+                    <li><strong>Email:</strong> For Official & Recorded Communication.</li>
+                    <li><strong>Google Calendar:</strong> Our Single Source of Truth for Scheduling.</li>
+                </ul>
+                <br>
+                Communication Commitments include: Responding with Respect (within 24 hours for DMs, quick acknowledgment for group messages), Giving a Heads-Up on Absences (24 hours in advance, or ASAP for emergencies), and Helping Us Fix Tech Issues Fast (report right away with details).
+                <br><br>
+                Peer Communication Guide: Lead with Respect, Share Knowledge Freely, Be a Reliable Teammate.
+                <br><br>
+                Attendance & Persistence Commitment: Be Present & Punctual (85% attendance benchmark), Communicate Proactively, Own Your Learning. Support systems are in place if attendance dips.`,
+                questions: [
+                    {
+                        q: "What is the primary communication platform for daily collaboration and quick updates?",
+                        a: "Slack"
+                    },
+                    {
+                        q: "According to the weekly breakdown, what is the focus for Week 1?",
+                        a: "Getting Started with AI-Native Building"
+                    },
+                    {
+                        q: "What is the recommended attendance benchmark for success in the program?",
+                        a: "85%"
+                    },
+                    {
+                        q: "What is the purpose of 'Build in Public'?",
+                        a: ["showcase your work", "enhance online presence", "expand network", "leapfrogging the traditional hiring process"]
+                    }
+                ]
+            },
+            {
+                topic: "Directing AI Creations & Version Control",
+                content: `Today's session (Sunday, June 15) focuses on "Directing Your First AI Creations & Version Control Basics".
+                <br><br>
+                You'll learn foundational AI prompting to direct AI (Gemini) to generate simple code (Python script & HTML page). You'll also understand GitHub basics with AI guidance for saving and organizing your AI-generated work.
+                <br><br>
+                Words of the Day:
+                <ul>
+                    <li><strong>Technical:</strong> Prompt (An instruction or question you give to an AI to get a specific response or action.)</li>
+                    <li><strong>Business:</strong> Iteration (The process of repeating a cycle of development, making small improvements each time to refine a product or idea.)</li>
+                </ul>
+                <br>
+                Morning Huddle (10:00 AM - 10:15 AM): Set goals for the day and share an insight from Saturday. Activities: Day overview, Share one thing you're excited to try with AI today.
+                <br><br>
+                L2L/Tech: Prompting Fundamentals 101 (10:15 AM - 11:30 AM): Learn core AI prompting techniques for effective AI direction. Activities: Practice giving AI (Gemini) clear instructions and sufficient context; Learn how to iterate on AI's output by refining prompts (e.g., 'Make it funnier', 'Make it more professional'); Guided exercises in prompting for simple text generation and code ideas.
+                <br><br>
+                Tech/Build: AI, Build My "Hello World!" (11:30 AM - 12:30 PM): Direct AI to generate your first simple Python script and HTML page. Activities: Prompt Gemini: 'Generate a simple Python script that prints a personalized welcome message!'; Prompt Gemini: 'Generate a basic HTML page with a title that says My AI Journey Begins!'; Use Cursor to save these AI-generated files. Focus: You provide the vision, AI writes the code.`,
+                questions: [
+                    {
+                        q: "What are the two key topics for Sunday, June 15th, according to the slides?",
+                        a: ["Directing Your First AI Creations", "Version Control Basics"]
+                    },
+                    {
+                        q: "What is the technical 'Word of the Day' and its definition?",
+                        a: "Prompt (An instruction or question you give to an AI to get a specific response or action.)"
+                    },
+                    {
+                        q: "What is the business 'Word of the Day' and its definition?",
+                        a: "Iteration (The process of repeating a cycle of development, making small improvements each time to refine a product or idea.)"
+                    },
+                    {
+                        q: "What are two types of simple code you will direct AI (Gemini) to generate?",
+                        a: ["Python script", "HTML page"]
+                    }
+                ]
+            }
+        ];
+
+        // Global variable for current lesson content to be used by the chatbot
+        let currentLessonContent = "";
+
+        // Function to show a custom modal
+        function showModal(message, confirmText = "OK", showCancel = false, onConfirm = () => {}, onCancel = () => {}) {
+            modalMessage.innerHTML = message; // Use innerHTML for potential formatting
+            modalConfirmButton.textContent = confirmText;
+            modalConfirmButton.onclick = () => {
+                confirmModal.style.display = 'none';
+                onConfirm();
+            };
+            if (showCancel) {
+                modalCancelButton.style.display = 'inline-block';
+                modalCancelButton.onclick = () => {
+                    confirmModal.style.display = 'none';
+                    onCancel();
+                };
+            } else {
+                modalCancelButton.style.display = 'none';
+            }
+            confirmModal.style.display = 'flex';
+        }
+
+        // Close modal button
+        closeModalButton.onclick = () => {
+            confirmModal.style.display = 'none';
+            // Default behavior if closed by X, might need to adjust based on context
+        };
+        window.onclick = (event) => {
+            if (event.target == confirmModal) {
+                confirmModal.style.display = 'none';
+            }
+        };
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.innerHTML = text; // Use innerHTML for rendered Markdown/HTML
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom
+        }
+
+        function updateScores() {
+            studentScoreSpan.textContent = studentScore;
+            teacherScoreSpan.textContent = teacherScore;
+            saveGameState();
+        }
+
+        async function saveGameState() {
+            if (!isAuthReady || !userId) {
+                console.log("Firebase not ready or no user ID, skipping save.");
+                return;
+            }
+            try {
+                // Public data for global game state, using a unique document ID for this app's game state
+                const gameDocRef = doc(db, `artifacts/${appId}/public/data/ysupGameStates`, 'globalGameState');
+                await setDoc(gameDocRef, {
+                    studentScore: studentScore,
+                    teacherScore: teacherScore,
+                    currentLessonIndex: currentLessonIndex,
+                    gameStarted: gameStarted,
+                    // Store userId who last updated or is playing to demonstrate multi-user data
+                    lastUpdatedBy: userId,
+                    timestamp: serverTimestamp()
+                }, { merge: true }); // Use merge: true to avoid overwriting other fields
+                console.log("Game state saved!");
+            } catch (error) {
+                console.error("Error saving game state:", error);
+            }
+        }
+
+        async function loadGameState() {
+            if (!isAuthReady || !userId) {
+                console.log("Firebase not ready or no user ID, skipping load.");
+                return;
+            }
+            try {
+                const gameDocRef = doc(db, `artifacts/${appId}/public/data/ysupGameStates`, 'globalGameState');
+                const docSnap = await getDoc(gameDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    studentScore = data.studentScore || 0;
+                    teacherScore = data.teacherScore || 0;
+                    currentLessonIndex = data.currentLessonIndex || 0;
+                    gameStarted = data.gameStarted || false;
+                    updateScores();
+                    console.log("Game state loaded:", data);
+
+                    // Re-enable input if game was started
+                    if (gameStarted) {
+                        userInput.disabled = false;
+                        sendButton.disabled = false;
+                        // Ask the next question if the game was in progress
+                        if (currentLessonIndex < lessons.length) {
+                            addMessage(`Welcome back! Let's continue with Lesson ${currentLessonIndex + 1}.`);
+                            currentLessonContent = lessons[currentLessonIndex].content;
+                            addMessage(currentLessonContent, 'bot');
+                            askNextQuestion();
+                        } else {
+                            addMessage("You've completed all lessons! Well done!");
+                        }
+                    } else {
+                        // If game not started, only enable input if it's the very first message.
+                        // The initial welcome message already sets up the "Type 'Yes' to start"
+                        // so we only enable here if it's a reload after game start but before first user input.
+                        userInput.disabled = false;
+                        sendButton.disabled = false;
+                    }
+
+                } else {
+                    console.log("No game state found, starting new game.");
+                    addMessage("No previous game found. Type 'Yes' to start the first lesson after reading the rules.", 'bot');
+                    userInput.disabled = false; // Enable input to start the game
+                    sendButton.disabled = false;
+                }
+            } catch (error) {
+                console.error("Error loading game state:", error);
+                // If there's an error loading, ensure input is enabled for a fresh start
+                userInput.disabled = false;
+                sendButton.disabled = false;
+            }
+        }
+
+        async function callGemini(prompt) {
+            loadingIndicator.style.display = 'flex'; // Show loading
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Gemini API response structure unexpected:", result);
+                    return "I'm having a little trouble understanding that. Could you rephrase?";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                return "I'm sorry, I couldn't process your request right now. Please try again.";
+            } finally {
+                loadingIndicator.style.display = 'none'; // Hide loading
+            }
+        }
+
+        async function processUserInput(input) {
+            addMessage(input, 'user');
+            userInput.value = ''; // Clear input
+
+            if (!gameStarted) {
+                if (input.toLowerCase().includes('yes')) {
+                    gameStarted = true;
+                    addMessage("Great! Let's dive into our first lesson.", 'bot');
+                    startLesson();
+                } else {
+                    addMessage("Please type 'Yes' to start the game after reviewing the rules.", 'bot');
+                }
+                saveGameState();
+                return;
+            }
+
+            // Check if the user is asking a question or answering
+            if (input.toLowerCase().includes('what is') ||
+                input.toLowerCase().includes('tell me about') ||
+                input.toLowerCase().includes('explain') ||
+                input.toLowerCase().includes('how does') ||
+                input.toLowerCase().includes('who is') ||
+                input.toLowerCase().includes('when is') ||
+                input.toLowerCase().includes('where is')) {
+                
+                hasAskedQuestionThisRound = true; // Mark that a question was asked
+                teacherScore += 25; // Teacher gets points for being asked a question
+                updateScores();
+                
+                const questionPrompt = `The user asked: "${input}". Based on the following lesson content, provide a helpful hint, example, or a related question to guide them to the answer, WITHOUT directly giving the answer. If the question is outside the scope of the provided lesson, gently redirect them.
+                <br><br>
+                Lesson Content: ${currentLessonContent}`;
+                
+                const guidance = await callGemini(questionPrompt);
+                addMessage(guidance, 'bot');
+
+            } else if (currentQuestion) {
+                const correctAnswer = Array.isArray(currentQuestion.a) ? currentQuestion.a.map(a => a.toLowerCase()) : [currentQuestion.a.toLowerCase()];
+                const userAnswer = input.toLowerCase().trim();
+
+                let isCorrect = false;
+                if (Array.isArray(currentQuestion.a)) {
+                    isCorrect = correctAnswer.some(answer => userAnswer.includes(answer));
+                } else {
+                    isCorrect = userAnswer.includes(correctAnswer[0]);
+                }
+
+                if (isCorrect) {
+                    addMessage("That's correct! Well done! You earned 10 YBUCKS for your team.", 'bot');
+                    studentScore += 10;
+                    updateScores();
+                    currentQuestion = null; // Clear the current question
+                    // If a question was asked by the user, award assistance points to the team
+                    if (hasAskedQuestionThisRound) {
+                        addMessage("100 YBUCKS awarded for assisting your learning!", 'bot');
+                        studentScore += 100;
+                        hasAskedQuestionThisRound = false; // Reset for next round
+                        updateScores();
+                    }
+                    setTimeout(askNextQuestion, 1500); // Ask next question after a short delay
+                } else {
+                    const hintPrompt = `The user provided the answer: "${input}" to the question: "${currentQuestion.q}". The correct answer is: "${Array.isArray(currentQuestion.a) ? currentQuestion.a.join(' or ') : currentQuestion.a}".
+                    <br><br>
+                    Without giving away the direct answer, provide a hint, a clarifying question, or a related example to help the user understand why their answer might be incorrect and guide them closer to the right answer. Focus on the core concept of the question.
+                    <br><br>
+                    Lesson Content: ${currentLessonContent}`;
+                    
+                    const hint = await callGemini(hintPrompt);
+                    addMessage(`Not quite. ${hint}`, 'bot');
+                    teacherScore += 10; // Teacher gets points for incorrect answer
+                    updateScores();
+                }
+            } else {
+                addMessage("I'm not sure how to respond to that. Are you asking a question about the lesson, or trying to answer a previous question?", 'bot');
+            }
+        }
+
+        function askNextQuestion() {
+            if (currentLessonIndex < lessons.length) {
+                const lesson = lessons[currentLessonIndex];
+                if (lesson.questions.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * lesson.questions.length);
+                    currentQuestion = lesson.questions[randomIndex];
+                    addMessage(`Time for a recall question: ${currentQuestion.q}`, 'bot');
+                } else {
+                    addMessage(`We've covered everything for Lesson ${currentLessonIndex + 1}. Moving to the next lesson!`, 'bot');
+                    currentLessonIndex++;
+                    saveGameState();
+                    setTimeout(startLesson, 1500);
+                }
+            } else {
+                addMessage("Congratulations! You've completed all the lessons and mastered the YsUp AI-Native Academy content!", 'bot');
+                showModal(`Game Over! Final Scores:<br>Student YBUCKS: ${studentScore}<br>Teacher YBUCKS: ${teacherScore}`, "Play Again?", true, () => {
+                    resetGame();
+                });
+                userInput.disabled = true;
+                sendButton.disabled = true;
+                saveGameState();
+            }
+        }
+
+        function startLesson() {
+            if (currentLessonIndex < lessons.length) {
+                const lesson = lessons[currentLessonIndex];
+                currentLessonContent = lesson.content; // Set global lesson content
+                addMessage(`--- Starting Lesson ${currentLessonIndex + 1}: ${lesson.topic} ---`, 'bot');
+                addMessage(lesson.content, 'bot');
+                setTimeout(askNextQuestion, 2000); // Give time to read lesson content
+            } else {
+                addMessage("You've completed all lessons! Well done!", 'bot');
+                showModal(`Game Over! Final Scores:<br>Student YBUCKS: ${studentScore}<br>Teacher YBUCKS: ${teacherScore}`, "Play Again?", true, () => {
+                    resetGame();
+                });
+                userInput.disabled = true;
+                sendButton.disabled = true;
+            }
+            saveGameState();
+        }
+
+        function resetGame() {
+            studentScore = 0;
+            teacherScore = 0;
+            currentLessonIndex = 0;
+            gameStarted = false;
+            currentQuestion = null;
+            hasAskedQuestionThisRound = false;
+            chatWindow.innerHTML = `
+                <div class="message bot">
+                    Welcome to YsUp AI-Native Academy @ Pursuit! Your objective is to learn everything taught in class before the bell rings by asking questions and scoring more YBUCKS as a team than the teacher (me, the computer). Let's start with the rules:
+                    <br><br>
+                    <strong>Rules:</strong>
+                    <ul>
+                        <li><strong>Ask:</strong> Students are encouraged to ask questions about the lecture without fear. You can write down your questions and answers before asking for assistance.</li>
+                        <li><strong>Assistance:</strong> The first student to raise their hand with the correct answer, or the team captain or teacher, can assist the student with their question. However, players cannot give away any answers. Instead, they must use clever questions, hints, examples, formulas, etc. to help the student arrive at the answer on their own.</li>
+                        <li><strong>No Cheating:</strong> Cheating is not allowed in the game. Players cannot give away any answers, and they must use clever questions, hints, examples, formulas, etc. to help the student arrive at the answer on their own.</li>
+                    </ul>
+                    Ready to begin? Type 'Yes' to start the first lesson!
+                </div>
+            `;
+            updateScores();
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            saveGameState();
+        }
+
+
+        // Event Listeners
+        sendButton.addEventListener('click', () => {
+            const input = userInput.value.trim();
+            if (input) {
+                processUserInput(input);
+            }
+        });
+
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter' && userInput.value.trim()) {
+                processUserInput(userInput.value.trim());
+            }
+        });
+
+        // Initialize input state
+        userInput.disabled = false;
+        sendButton.disabled = false;
+
+        // Load game state when Firebase auth is ready
+        // The loadGameState function is called within the onAuthStateChanged listener
+        // to ensure Firebase is initialized and user is authenticated.
+        // For non-Firebase cases, it's called directly after checking firebaseConfig.
+    </script>
+</body>
+</html> 
