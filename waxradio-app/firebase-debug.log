@@ -1,0 +1,51 @@
+[debug] [2025-06-24T23:11:05.849Z] ----------------------------------------------------------------------
+[debug] [2025-06-24T23:11:05.855Z] Command:       /Users/nawwg/.nvm/versions/node/v18.20.8/bin/node /Users/nawwg/.nvm/versions/node/v18.20.8/bin/firebase init hosting
+[debug] [2025-06-24T23:11:05.856Z] CLI Version:   13.35.1
+[debug] [2025-06-24T23:11:05.856Z] Platform:      darwin
+[debug] [2025-06-24T23:11:05.856Z] Node Version:  v18.20.8
+[debug] [2025-06-24T23:11:05.858Z] Time:          Tue Jun 24 2025 19:11:05 GMT-0400 (Eastern Daylight Time)
+[debug] [2025-06-24T23:11:05.858Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-24T23:11:07.875Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-24T23:11:07.892Z] > authorizing via signed-in user (najee.jeremiah@pursuit.org)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/nawwg/pursuit/waxradio-app
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-06-24T23:11:07.949Z] Using project from CLI flag: wax-radio
+[debug] [2025-06-24T23:11:07.981Z] Checked if tokens are valid: true, expires at: 1750809935378
+[debug] [2025-06-24T23:11:07.981Z] Checked if tokens are valid: true, expires at: 1750809935378
+[debug] [2025-06-24T23:11:07.985Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio [none]
+[debug] [2025-06-24T23:11:08.610Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio 200
+[debug] [2025-06-24T23:11:08.610Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio {"projectId":"wax-radio","projectNumber":"881907029843","displayName":"Wax Radio","name":"projects/wax-radio","resources":{"hostingSite":"wax-radio"},"state":"ACTIVE","etag":"1_405ffa54-f53f-4438-9c67-9167672a800a"}
+[info] i  Using project wax-radio (Wax Radio) 
+[info] 
+=== Hosting Setup
+[debug] [2025-06-24T23:11:08.634Z] Checked if tokens are valid: true, expires at: 1750809935378
+[debug] [2025-06-24T23:11:08.634Z] Checked if tokens are valid: true, expires at: 1750809935378
+[debug] [2025-06-24T23:11:08.634Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio [none]
+[debug] [2025-06-24T23:11:08.883Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio 200
+[debug] [2025-06-24T23:11:08.883Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wax-radio {"projectId":"wax-radio","projectNumber":"881907029843","displayName":"Wax Radio","name":"projects/wax-radio","resources":{"hostingSite":"wax-radio"},"state":"ACTIVE","etag":"1_405ffa54-f53f-4438-9c67-9167672a800a"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
